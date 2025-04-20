@@ -5,10 +5,10 @@ CC=gcc
 CFLAGS=-c -Wall
 
 # executable name
-TARGET = file_handler
+TARGET = cmpsh
 
 # source files
-SRC = main.c file_handler.c
+SRC = cmpsh.c utils.c
 
 # .c files to .o files conversion
 OBJ = $(SRC:.c=.o)
