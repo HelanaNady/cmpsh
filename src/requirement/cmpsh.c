@@ -11,12 +11,12 @@ void nonInteractiveMode() {
     printf("non interactive mode");
 }
 
-bool isInteractiveMode (char* command) {
+bool isInteractiveMode(char* command) {
     int size = strlen(command);
     const char* lastThreeLetters = &command[size - 3];
     printf("%s\n", lastThreeLetters);
 
-    if(strcmp(".sh", command) == 0) {
+    if (strcmp(".sh", lastThreeLetters) == 0) {
         return true;
     }
     else {
@@ -24,7 +24,38 @@ bool isInteractiveMode (char* command) {
     }
 }
 
-int main (int argc, char** argv) {
+void shellLoop(void) {
+    // contains main loop of shell
+}
+
+char* readLine() {
+    // read input line 
+}
+
+
+char** parseLine(char* line) {
+    // tokenize input line 
+}
+
+// built in commands
+
+int exit(void) {
+    return 0;
+}
+
+int cdCommand(char** arguments) {
+    return 0;
+}
+
+int pwdCommand(char** arguments) {
+
+}
+
+int overwritePaths(char** arguments) {
+
+}
+
+int main(int argc, char** argv) {
     // command?
     char* command = argv[1];
     printf("%s\n", argv[1]);
