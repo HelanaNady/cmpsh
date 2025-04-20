@@ -1,27 +1,29 @@
-# the compiler to use
+# compiler to use
 CC=gcc
 
-# for warnings
+# warnings
 CFLAGS=-c -Wall
 
-# name of exe file
-TARGET = cmpsh
+# executable name
+TARGET = file_handler
 
-# source file
-SRC = cmpsh.c
+# source files
+SRC = main.c file_handler.c
 
+# .c files to .o files conversion
 OBJ = $(SRC:.c=.o)
 
+# target
 all: $(TARGET)
 
+# object and executables linking
 $(TARGET): $(OBJ)
 	$(CC) $(OBJ) -o $(TARGET)
 
-
-# clean
+# cleanups
 clean:
 	rm -f $(OBJ) $(TARGET)
 
-# Run the shell after compiling
+# running after compiling
 run: $(TARGET)
 	./$(TARGET)

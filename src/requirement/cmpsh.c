@@ -13,10 +13,10 @@ void non_interactive_mode() {
 
 bool is_interactive_mode(char* command) {
     int size = strlen(command);
-    const char* lastThreeLetters = &command[size - 3];
-    printf("%s\n", lastThreeLetters);
+    const char* last_three_letters = &command[size - 3];
+    printf("%s\n", last_three_letters);
 
-    if (strcmp(".sh", lastThreeLetters) == 0) {
+    if (strcmp(".sh", last_three_letters) == 0) {
         return true;
     }
     else {
@@ -39,7 +39,7 @@ char** parse_line(char* line) {
 
 // built in commands
 
-int exit(void) {
+int exit_command(void) {
     return 0;
 }
 
@@ -54,6 +54,8 @@ int pwd_command(char** arguments) {
 int overwrite_paths(char** arguments) {
 
 }
+
+
 
 int main(int argc, char** argv) {
     // command?
