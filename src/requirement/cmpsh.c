@@ -5,15 +5,11 @@
 #include "utils.h"
 
 int main(int argc, char** argv) {
+
+    // check if there are arguments first
     // command?
-    char* command = argv[1];
-    printf("%s\n", argv[1]);
-    // check if it runs in interactive mode or non interactive mode
-    if (is_interactive_mode(command)) {
-        interactive_mode();
-    }
-    else {
-        non_interactive_mode();
-    }
+
+    cmp_shell_loop();    
+
     return 0;
 }
