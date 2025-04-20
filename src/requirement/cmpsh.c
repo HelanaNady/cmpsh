@@ -3,15 +3,15 @@
 #include <stdbool.h>
 #include <string.h>
 
-void interactiveMode() {
+void interactive_mode() {
     printf("interactive mode");
 }
 
-void nonInteractiveMode() {
+void non_interactive_mode() {
     printf("non interactive mode");
 }
 
-bool isInteractiveMode(char* command) {
+bool is_interactive_mode(char* command) {
     int size = strlen(command);
     const char* lastThreeLetters = &command[size - 3];
     printf("%s\n", lastThreeLetters);
@@ -24,16 +24,16 @@ bool isInteractiveMode(char* command) {
     }
 }
 
-void shellLoop(void) {
+void cmp_shell_loop(void) {
     // contains main loop of shell
 }
 
-char* readLine() {
+char* read_line() {
     // read input line 
 }
 
 
-char** parseLine(char* line) {
+char** parse_line(char* line) {
     // tokenize input line 
 }
 
@@ -43,15 +43,15 @@ int exit(void) {
     return 0;
 }
 
-int cdCommand(char** arguments) {
+int cd_command(char** arguments) {
     return 0;
 }
 
-int pwdCommand(char** arguments) {
+int pwd_command(char** arguments) {
 
 }
 
-int overwritePaths(char** arguments) {
+int overwrite_paths(char** arguments) {
 
 }
 
@@ -60,11 +60,11 @@ int main(int argc, char** argv) {
     char* command = argv[1];
     printf("%s\n", argv[1]);
     // check if it runs in interactive mode or non interactive mode
-    if (isInteractiveMode(command)) {
-        interactiveMode();
+    if (is_interactive_mode(command)) {
+        interactive_mode();
     }
     else {
-        nonInteractiveMode();
+        non_interactive_mode();
     }
     return 0;
 }
