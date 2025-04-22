@@ -2,9 +2,11 @@
 #define UTILS_H
 
 void interactive_mode();
-void non_interactive_mode();
-bool is_interactive_mode(char* command);
-void cmp_shell_loop(void);
+void non_interactive_mode(char* scriptName);
+bool is_non_interactive_mode(char* scriptName);
+
+// shell specific
+void cmp_shell_loop();
 char* read_line();
 char** parse_line(char* line);
 
