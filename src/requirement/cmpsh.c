@@ -4,9 +4,14 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+
 #include "utils.h"
+#include "builtin.h"
+
+// const int TOKENS_BUFFER_SIZE = 50;
 
 int main(int argc, char** argv) {
+
     switch (argc) {
     case 1:
         cmp_shell_loop();

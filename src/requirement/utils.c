@@ -5,9 +5,8 @@
 #include <string.h>
 
 #include "utils.h"
-
-const int TOKENS_BUFFER_SIZE = 50;
-
+#include "builtin.h"
+#include "shared.h"
 
 void interactive_mode() {
     printf("interactive mode \n");
@@ -49,7 +48,26 @@ void cmp_shell_loop() {
         }
 
         arguments = parse_line(inputLine);
+        char* command = arguments[0];
 
+        // int i = 0;
+
+        // while(command[i] != '\0') {
+        //     printf("%d - %c \n", i, command[i]);
+        //     i++;
+        // }
+
+        if (strcmp(command, "cd") == 0) {
+
+            printf("command name: %s\n", command);
+            cd_command(arguments);
+        }
+
+        else if (strcmp(command, "pwd") == 0) {
+            printf("command name: %s\n", command);
+
+            pwd_command(arguments);
+        }
 
         // check if it runs in interactive mode or non interactive mode
         // interactive_mode();
@@ -71,11 +89,16 @@ char* read_line() {
         exit(EXIT_FAILURE);
     }
 
+    size_t length = strlen(inputLine);
+    if (length > 0 && inputLine[length - 1] == '\n') {
+        inputLine[length - 1] = '\0';
+    }
+
     return inputLine;
 }
 
 char** parse_line(char* line) {
-    int bufferSize = TOKENS_BUFFER_SIZE;
+    int bufferSize = BUFFER_SIZE;
     char** tokens = malloc(sizeof(char*) * bufferSize);
 
     int index = 0;
@@ -88,7 +111,7 @@ char** parse_line(char* line) {
     }
 
     token = strtok_r(line, " ", &rest);
-    
+
     while (token != NULL) {
         tokens[index] = token;
         index++;
@@ -100,20 +123,3 @@ char** parse_line(char* line) {
     return tokens;
 }
 
-// built in commands
-
-int exit_command(void) {
-    return 0;
-}
-
-int cd_command(char** arguments) {
-    return 0;
-}
-
-int pwd_command(char** arguments) {
-    return 0;
-}
-
-int overwrite_paths(char** arguments) {
-    return 0;
-}

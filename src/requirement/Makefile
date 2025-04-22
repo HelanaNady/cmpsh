@@ -8,7 +8,7 @@ CFLAGS=-c -Wall
 TARGET = cmpsh
 
 # source files
-SRC = cmpsh.c utils.c
+SRC = cmpsh.c builtin.c utils.c 
 
 # .c files to .o files conversion
 OBJ = $(SRC:.c=.o)
