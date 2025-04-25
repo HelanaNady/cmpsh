@@ -9,7 +9,7 @@
 
 #define PATH_MAX 1024
 
-int exit_command(void) {
+int exit_command(char** arguments) {
     exit(EXIT_SUCCESS);
 }
 

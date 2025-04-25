@@ -8,9 +8,19 @@
 #include "builtin.h"
 #include "shared.h"
 
+const int BUFFER_SIZE = 1024;
+
+const struct Builtin builtins[] = {
+    {"cd", cd_command},
+    {"pwd", pwd_command},
+    {"exit", exit_command},
+    {"paths", overwrite_paths}
+};
+
+#define BUILTIN_SIZE (sizeof(builtins) / sizeof(builtins[0]))
+
 void interactive_mode() {
     printf("interactive mode \n");
-
 }
 
 void non_interactive_mode(char* scriptName) {
@@ -57,16 +67,12 @@ void cmp_shell_loop() {
         //     i++;
         // }
 
-        if (strcmp(command, "cd") == 0) {
-
-            printf("command name: %s\n", command);
-            cd_command(arguments);
-        }
-
-        else if (strcmp(command, "pwd") == 0) {
-            printf("command name: %s\n", command);
-
-            pwd_command(arguments);
+ 
+        for (int i = 0; i < BUILTIN_SIZE; i++) {
+            if(strcmp(command, builtins[i].commandName) == 0) {
+                printf("command name: %s \n", command);
+                builtins[i].commandFunction(arguments);
+            }
         }
 
         // check if it runs in interactive mode or non interactive mode
