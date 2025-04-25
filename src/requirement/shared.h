@@ -10,4 +10,7 @@ struct Builtin {
 extern const int BUFFER_SIZE;
 extern const struct Builtin builtins[];
 
+extern char** shell_paths;  
+extern int shell_path_count;
+
 #endif

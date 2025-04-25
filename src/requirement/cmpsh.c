@@ -6,12 +6,14 @@
 #include <string.h>
 
 #include "utils.h"
-#include "builtin.h"
+#include "commands.h"
 
 // const int TOKENS_BUFFER_SIZE = 50;
 
 int main(int argc, char** argv) {
 
+    init_shell_paths();
+    
     switch (argc) {
     case 1:
         cmp_shell_loop();

@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "utils.h"
-#include "builtin.h"
+#include "commands.h"
 #include "shared.h"
 
 const int BUFFER_SIZE = 1024;
@@ -68,12 +68,18 @@ void cmp_shell_loop() {
         // }
 
  
+        bool isBuiltinCommand = false;
         for (int i = 0; i < BUILTIN_SIZE; i++) {
             if(strcmp(command, builtins[i].commandName) == 0) {
-                printf("command name: %s \n", command);
                 builtins[i].commandFunction(arguments);
+                isBuiltinCommand = true;
             }
         }
+        
+        if (!isBuiltinCommand) {
+            execute_external_command(arguments);
+        }
+
 
         // check if it runs in interactive mode or non interactive mode
         // interactive_mode();
