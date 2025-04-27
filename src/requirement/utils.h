@@ -10,4 +10,6 @@ void cmp_shell_loop();
 char* read_line();
 char** parse_line(char* line);
 
+void readScript(const char* filename);
+
 #endif 

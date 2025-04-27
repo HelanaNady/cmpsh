@@ -27,7 +27,8 @@ void non_interactive_mode(char* scriptName) {
     if (!is_non_interactive_mode(scriptName)) {
         return;
     }
-    printf("non interactive mode \n");
+
+    readScript(scriptName);
 }
 
 bool is_non_interactive_mode(char* scriptName) {
@@ -39,6 +40,22 @@ bool is_non_interactive_mode(char* scriptName) {
     }
     else {
         return false;
+    }
+}
+
+void execute_command(char** arguments) {
+    char* command = arguments[0];
+    bool isBuiltinCommand = false;
+
+    for (int i = 0; i < BUILTIN_SIZE; i++) {
+        if (strcmp(command, builtins[i].commandName) == 0) {
+            builtins[i].commandFunction(arguments);
+            isBuiltinCommand = true;
+        }
+    }
+
+    if (!isBuiltinCommand) {
+        execute_external_command(arguments);
     }
 }
 
@@ -60,25 +77,8 @@ void cmp_shell_loop() {
         arguments = parse_line(inputLine);
         char* command = arguments[0];
 
-        // int i = 0;
 
-        // while(command[i] != '\0') {
-        //     printf("%d - %c \n", i, command[i]);
-        //     i++;
-        // }
-
- 
-        bool isBuiltinCommand = false;
-        for (int i = 0; i < BUILTIN_SIZE; i++) {
-            if(strcmp(command, builtins[i].commandName) == 0) {
-                builtins[i].commandFunction(arguments);
-                isBuiltinCommand = true;
-            }
-        }
-        
-        if (!isBuiltinCommand) {
-            execute_external_command(arguments);
-        }
+        execute_command(arguments);
 
 
         // check if it runs in interactive mode or non interactive mode
@@ -135,3 +135,48 @@ char** parse_line(char* line) {
     return tokens;
 }
 
+
+/// file handler stuff
+
+bool canOpenFile(FILE* fptr) {
+    if (fptr == NULL) {
+        fprintf(stderr, "File does not exist");
+        return false;
+    }
+    return true;
+}
+
+void readScript(const char* filename) {
+    // open file in read mode
+    FILE* fptr = fopen(filename, "r");
+
+    if (!canOpenFile(fptr)) {
+        return;
+    }
+
+    char buffer[BUFFER_SIZE];
+
+    // fgets prints line by line
+    while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
+        // get size of buffer
+        int i = 0;
+        while (buffer[i] != '\0') {
+            if(buffer[i] == '\n') {
+                buffer[i] = '\0';
+            }
+            i++;
+        }
+ 
+        // 
+        char** arguments = parse_line(buffer);
+
+        execute_command(arguments);
+    }
+
+    fclose(fptr);
+}
+
+// char** parse_script_line(char* buffer) {
+//     // if /n replace with null 
+//     // else do nothing 
+// }

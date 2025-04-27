@@ -104,8 +104,6 @@ int execute_external_command(char** arguments) {
                 execv(fullPath, arguments);
             }
         }
-
-        exit(EXIT_FAILURE);
     }
     // parent
     else if (pid > 0) {
@@ -114,10 +112,13 @@ int execute_external_command(char** arguments) {
             waitPid = waitpid(pid, &status, WUNTRACED);
         }
         while (!WIFEXITED(status) && !WIFSIGNALED(status));
-    }
-    // error
-    else {
-        perror("An error has occured!");
+
+        // check exit status of child process
+        int exit_status = WEXITSTATUS(status);
+
+        if(exit_status != 0) {
+            perror("An error has occured!");
+        }
     }
 
     return 0;
