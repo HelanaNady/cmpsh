@@ -100,26 +100,15 @@ int execute_external_command(char** arguments) {
             snprintf(fullPath, sizeof(fullPath), "%s%s", shell_paths[i], command);
             
             if (access(fullPath, X_OK) == 0) {
-                printf("%s\n", fullPath);
                 execv(fullPath, arguments);
+                fprintf(stderr, "An error has occured!\n");
             }
         }
+        fprintf(stderr, "An error has occured!\n");
     }
     // parent
     else if (pid > 0) {
-        // wait on return signal
-        do {
-            waitPid = waitpid(pid, &status, WUNTRACED);
-        }
-        while (!WIFEXITED(status) && !WIFSIGNALED(status));
-
-        // check exit status of child process
-        int exit_status = WEXITSTATUS(status);
-
-        if(exit_status != 0) {
-            perror("An error has occured!");
-        }
+        waitPid = waitpid(pid, &status, WUNTRACED);
     }
-
-    return 0;
+    return 1;
 }
