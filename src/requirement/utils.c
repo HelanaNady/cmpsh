@@ -14,7 +14,7 @@ const struct Builtin builtins[] = {
     {"cd", cd_command},
     {"pwd", pwd_command},
     {"exit", exit_command},
-    {"paths", overwrite_paths}
+    {"path", overwrite_paths}
 };
 
 #define BUILTIN_SIZE (sizeof(builtins) / sizeof(builtins[0]))
