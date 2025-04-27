@@ -15,11 +15,11 @@ int main(int argc, char** argv) {
     init_shell_paths();
     
     switch (argc) {
-    case 1:
+    case 2:
         cmp_shell_loop();
         break;
 
-    case 2:
+    case 3:
         char* scriptName = argv[1];
         non_interactive_mode(scriptName);
         break;
