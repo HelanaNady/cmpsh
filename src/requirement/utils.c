@@ -10,6 +10,11 @@
 
 const int BUFFER_SIZE = 1024;
 
+#define MAGENTA "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define RED     "\x1b[31m"
+#define RESET   "\x1b[0m"
+
 const struct Builtin builtins[] = {
     {"cd", cd_command},
     {"pwd", pwd_command},
@@ -50,7 +55,8 @@ void cmp_shell_loop() {
     // int commandStatus = -1;
 
     do {
-        printf("%s", "cmpsh> ");
+        printf(CYAN "%s", "cmpsh> ");
+        printf(RESET);
         inputLine = read_line();
 
         if (strcmp(inputLine, "\n") == 0) {
