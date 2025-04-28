@@ -24,23 +24,7 @@ void interactive_mode() {
 }
 
 void non_interactive_mode(char* scriptName) {
-    // if (!is_non_interactive_mode(scriptName)) {
-    //     return;
-    // }
-
     readScript(scriptName);
-}
-
-bool is_non_interactive_mode(char* scriptName) {
-    int size = strlen(scriptName);
-    const char* last_three_letters = &scriptName[size - 3];
-
-    if (strcmp(".sh", last_three_letters) == 0) {
-        return true;
-    }
-    else {
-        return false;
-    }
 }
 
 void execute_command(char** arguments) {

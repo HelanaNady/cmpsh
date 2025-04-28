@@ -3,7 +3,6 @@
 
 void interactive_mode();
 void non_interactive_mode(char* scriptName);
-bool is_non_interactive_mode(char* scriptName);
 
 // shell specific
 void cmp_shell_loop();

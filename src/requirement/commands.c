@@ -87,12 +87,11 @@ int overwrite_paths(char** arguments) {
 
         // check if it is a valid directory path
         struct stat buffer;
-        // if (stat(shell_paths[i], &buffer) < -1) {
-        //     continue;
-        // }
+        if (stat(shell_paths[i], &buffer) < -1) {
+            continue;
+        }
 
         shell_paths[i] = new_path;
-        printf("%s\n", shell_paths[i]);
     }
 
     return 0;
@@ -110,7 +109,7 @@ int execute_external_command(char** arguments) {
 
     // child process
     if (pid == 0) {
-        // check first if command can be executed directly 
+        // check first if command can be executed directly - custom script
         if (strncmp(arguments[0], "./", 2) == 0) {
             char buffer[PATH_MAX];
             getcwd(buffer, sizeof(buffer));
@@ -127,8 +126,8 @@ int execute_external_command(char** arguments) {
 
         // search each path 
         for (int i = 0; i < shell_path_count; i++) {
-            // char* path = strcat(shell_paths[i], command);
             char fullPath[PATH_MAX];
+
             snprintf(fullPath, sizeof(fullPath), "%s%s", shell_paths[i], command);
 
             if (is_executable(fullPath)) {
