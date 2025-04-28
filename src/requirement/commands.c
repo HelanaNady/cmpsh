@@ -4,10 +4,12 @@
 #include <stdbool.h>
 #include <string.h>
 #include <sched.h>
+#include <sys/stat.h>
+#include <bits/waitflags.h>
+
 
 #include "commands.h"
 #include "shared.h"
-#include <bits/waitflags.h>
 #include <sys/wait.h>
 
 
@@ -59,7 +61,7 @@ int pwd_command(char** arguments) {
 
 int overwrite_paths(char** arguments) {
     // reset everything
-    for(int i = 0; i < shell_path_count; i++) {
+    for (int i = 0; i < shell_path_count; i++) {
         free(shell_paths[i]);
     }
 
@@ -74,12 +76,30 @@ int overwrite_paths(char** arguments) {
 
     shell_paths = malloc(shell_path_count * sizeof(char*));
 
-    for(int i = 0; i < shell_path_count; i++) {
-        shell_paths[i] = arguments[i+1];
+    for (int i = 0; i < shell_path_count; i++) {
+        char* new_path = arguments[i + 1];
+
+        if (strcmp(new_path, ".") == 0) {
+            // add current directory path 
+            char buffer[PATH_MAX];
+            new_path = getcwd(buffer, PATH_MAX);
+        }
+
+        // check if it is a valid directory path
+        struct stat buffer;
+        // if (stat(shell_paths[i], &buffer) < -1) {
+        //     continue;
+        // }
+
+        shell_paths[i] = new_path;
         printf("%s\n", shell_paths[i]);
     }
 
     return 0;
+}
+
+bool is_executable(char* path) {
+    return access(path, X_OK) == 0;
 }
 
 int execute_external_command(char** arguments) {
@@ -87,9 +107,21 @@ int execute_external_command(char** arguments) {
     int status;
 
     pid = fork();
-    
+
     // child process
     if (pid == 0) {
+        // check first if command can be executed directly 
+        if (strncmp(arguments[0], "./", 2) == 0) {
+            char buffer[PATH_MAX];
+            getcwd(buffer, sizeof(buffer));
+
+            char fullPath[PATH_MAX];
+            snprintf(fullPath, sizeof(fullPath), "%s/%s", buffer, arguments[0] + 2);
+
+            execv(arguments[0], arguments);
+            fprintf(stderr, "An error has occured!\n");
+        }
+        
         char command[PATH_MAX];
         snprintf(command, sizeof(command), "/%s", arguments[0]);
 
@@ -98,13 +130,13 @@ int execute_external_command(char** arguments) {
             // char* path = strcat(shell_paths[i], command);
             char fullPath[PATH_MAX];
             snprintf(fullPath, sizeof(fullPath), "%s%s", shell_paths[i], command);
-            
-            if (access(fullPath, X_OK) == 0) {
+
+            if (is_executable(fullPath)) {
                 execv(fullPath, arguments);
-                fprintf(stderr, "An error has occured!\n");
+                fprintf(stderr, "An error has occured! not valid \n");
             }
         }
-        fprintf(stderr, "An error has occured!\n");
+        fprintf(stderr, "An error has occured! not found also\n");
     }
     // parent
     else if (pid > 0) {

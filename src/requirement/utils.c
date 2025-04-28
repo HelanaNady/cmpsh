@@ -24,9 +24,9 @@ void interactive_mode() {
 }
 
 void non_interactive_mode(char* scriptName) {
-    if (!is_non_interactive_mode(scriptName)) {
-        return;
-    }
+    // if (!is_non_interactive_mode(scriptName)) {
+    //     return;
+    // }
 
     readScript(scriptName);
 }
@@ -167,9 +167,7 @@ void readScript(const char* filename) {
             i++;
         }
  
-        // 
         char** arguments = parse_line(buffer);
-
         execute_command(arguments);
     }
 
