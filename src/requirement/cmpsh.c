@@ -11,7 +11,7 @@
 // const int TOKENS_BUFFER_SIZE = 50;
 
 int main(int argc, char** argv) {
-
+    
     init_shell_paths();
     
     switch (argc) {

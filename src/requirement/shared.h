@@ -1,7 +1,6 @@
 #ifndef SHARED_H
 #define SHARED_H
 
-
 struct Builtin {
     const char* commandName;
     int (*commandFunction)(char**);

@@ -70,7 +70,6 @@ void cmp_shell_loop() {
 
         execute_command(arguments);
 
-
         // check if it runs in interactive mode or non interactive mode
         // interactive_mode();
 
