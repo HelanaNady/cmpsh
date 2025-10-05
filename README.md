@@ -20,10 +20,10 @@ Non-Interactive Mode
 
 ## 🧩 Architecture
 
-- **cmpsh:** main module that runs the continuous shell loop  
-- **utils:** contains helper functions
-- **commands** handles command execution logic
-- **shared:** stores shared data across modules
+- **`cmpsh`:** main module that runs the continuous shell loop  
+- **`utils`:** contains helper functions
+- **`commands`:** handles command execution logic
+- **`shared.h`:** stores shared data across modules
 
 ## 🔄 Flow
 1. **Input Parsing**  
