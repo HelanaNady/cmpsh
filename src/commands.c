@@ -265,6 +265,6 @@ int execute_external_command(char** arguments) {
             waitpid(pids[k], NULL, 0);
         }
     }
-   
+
     return 1;
 }
