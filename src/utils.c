@@ -65,8 +65,7 @@ void cmp_shell_loop() {
         }
 
         arguments = parse_line(inputLine);
-        char* command = arguments[0];
-
+        // char* command = arguments[0];
 
         execute_command(arguments);
 
@@ -102,28 +101,74 @@ char** parse_line(char* line) {
     int bufferSize = BUFFER_SIZE;
     char** tokens = malloc(sizeof(char*) * bufferSize);
 
-    int index = 0;
-    char* token;
-    char* rest = line;
-
     if (!tokens) {
         perror("An error has occured!");
         exit(EXIT_FAILURE);
     }
 
-    token = strtok_r(line, " ", &rest);
+    int size = strlen(line);
+    int tokenCount = 0;
+    int index = 0;
 
-    while (token != NULL) {
-        tokens[index] = token;
-        index++;
-        token = strtok_r(NULL, " ", &rest);
+    while (index < size) {
+
+        while (index < size && line[index] == ' ') {
+            index++;
+        }
+        if (index >= size) {
+            break;
+        }
+
+        int start = index;
+        int end = index;
+        char* token = NULL;
+
+        if (line[index] == '"' || line[index] == '\'') {
+            char quote = line[index];
+            index++;
+            start = index;
+
+            while (index < size && line[index] != quote) {
+                index++;
+            }
+
+            end = index - 1;
+            index++;
+        }
+        else if (line[index] == '|' || line[index] == '<' || line[index] == '>') {
+            token = malloc(2);
+            token[0] = line[index];
+            token[1] = '\0';
+            index++;
+
+            tokens[tokenCount] = token;
+            tokenCount++;
+
+            continue;
+        }
+        else {
+            while (index < size && line[index] != ' ' &&
+                line[index] != '|'
+                && line[index] != '<'
+                && line[index] != '>') {
+                index++;
+            }
+
+            end = index - 1;
+        }
+
+        int tokenSize = end - start + 1;
+        token = malloc(tokenSize + 1);
+        token = strncpy(token, line + start, tokenSize);
+
+        token[tokenSize] = '\0';
+        tokens[tokenCount] = token;
+        tokenCount++;
     }
 
-    // marking end of array to get size later
-    tokens[index] = NULL;
+    tokens[tokenCount] = NULL;
     return tokens;
 }
-
 
 /// file handler stuff
 
@@ -150,12 +195,12 @@ void readScript(const char* filename) {
         // get size of buffer
         int i = 0;
         while (buffer[i] != '\0') {
-            if(buffer[i] == '\n') {
+            if (buffer[i] == '\n') {
                 buffer[i] = '\0';
             }
             i++;
         }
- 
+
         char** arguments = parse_line(buffer);
         execute_command(arguments);
     }

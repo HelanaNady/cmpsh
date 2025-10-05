@@ -192,77 +192,79 @@ int execute_external_command(char** arguments) {
             waitPid = waitpid(pid, &status, WUNTRACED);
         }
     }
-    // presence of one pipe is enough
-    int processesNumber = pipes + 1;
-    char*** commandArguments = parse_pipe_commands(arguments, processesNumber);
+    else {
+        // presence of one pipe is enough
+        int processesNumber = pipes + 1;
+        char*** commandArguments = parse_pipe_commands(arguments, processesNumber);
 
-    // create n-1 pipes
-    int fds[pipes][2];
+        // create n-1 pipes
+        int fds[pipes][2];
 
-    // pipe creations
-    for (int j = 0; j < pipes; j++) {
-        if (pipe(fds[j]) == -1) {
-            perror("pipe failed");
-            return 1;
+        // pipe creations
+        for (int j = 0; j < pipes; j++) {
+            if (pipe(fds[j]) == -1) {
+                perror("pipe failed");
+                return 1;
+            }
         }
-    }
 
-    pid_t* pids = malloc(processesNumber * sizeof(pid_t));
+        pid_t* pids = malloc(processesNumber * sizeof(pid_t));
 
-    if (!pids) {
-        fprintf(stderr, "An error has occured!\n");
-    }
-
-    // for in for loop
-    for (int i = 0; i < processesNumber; i++) {
-        pid_t pid = fork();
-
-        if (pid < 0) {
+        if (!pids) {
             fprintf(stderr, "An error has occured!\n");
         }
 
-        if (pid == 0) {
-            if (i == 0) {
-                // change stdout to point to write of i only
-                dup2(fds[i][1], STDOUT_FILENO);
+        // for in for loop
+        for (int i = 0; i < processesNumber; i++) {
+            pid_t pid = fork();
+
+            if (pid < 0) {
+                fprintf(stderr, "An error has occured!\n");
             }
-            else if (i == processesNumber - 1) {
-                // change stdin to point to read of i-1 only
-                dup2(fds[i - 1][0], STDIN_FILENO);
+
+            if (pid == 0) {
+                if (i == 0) {
+                    // change stdout to point to write of i only
+                    dup2(fds[i][1], STDOUT_FILENO);
+                }
+                else if (i == processesNumber - 1) {
+                    // change stdin to point to read of i-1 only
+                    dup2(fds[i - 1][0], STDIN_FILENO);
+                }
+                else {
+                    // change stdin to point to read of i-1
+                    // change stdout to point to write of i for next process
+                    dup2(fds[i - 1][0], STDIN_FILENO);
+                    dup2(fds[i][1], STDOUT_FILENO);
+                }
+
+                // close all of pipes fds 
+                for (int j = 0; j < pipes; j++) {
+                    close(fds[j][0]);
+                    close(fds[j][1]);
+                }
+
+                // close(fds[i][0]);
+                // close(fds[i][1]);
+
+                execute_child_command(commandArguments[i]);
             }
             else {
-                // change stdin to point to read of i-1
-                // change stdout to point to write of i for next process
-                dup2(fds[i - 1][0], STDIN_FILENO);
-                dup2(fds[i][1], STDOUT_FILENO);
+                pids[i] = pid;
             }
-
-            // close all of pipes fds 
-            for (int j = 0; j < pipes; j++) {
-                close(fds[j][0]);
-                close(fds[j][1]);
-            }
-
-            // close(fds[i][0]);
-            // close(fds[i][1]);
-
-            execute_child_command(commandArguments[i]);
         }
-        else {
-            pids[i] = pid;
+
+        // close all pipes
+        for (int j = 0; j < pipes; j++) {
+            close(fds[j][0]);
+            close(fds[j][1]);
+        }
+
+        // wait for all children
+        for (int k = 0; k < processesNumber; k++) {
+            waitpid(pids[k], NULL, 0);
         }
     }
-
-    // close all pipes
-    for (int j = 0; j < pipes; j++) {
-        close(fds[j][0]);
-        close(fds[j][1]);
-    }
-
-    // wait for all children
-    for (int k = 0; k < processesNumber; k++) {
-        waitpid(pids[k], NULL, 0);
-    }
-
+   
     return 1;
 }
