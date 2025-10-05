@@ -2,7 +2,7 @@
 <div align="center">cmpsh is a minimal shell program in C that supports both interactive and non-interactive modes</div>
 
 
-## Features
+## ✨ Features
 
 Interactive Mode
 - Execute built-in commands:
@@ -18,14 +18,14 @@ Non-Interactive Mode
 - Executing script files
 
 
-# Architecture
+## 🧩 Architecture
 
 - **cmpsh:** main module that runs the continuous shell loop  
 - **utils:** contains helper functions
 - **commands** handles command execution logic
 - **shared:** stores shared data across modules
 
-## Flow
+## 🔄 Flow
 1. **Input Parsing**  
 2. **Command Execution & Classification**  
    - **Internal commands:** handled directly by the shell
@@ -34,7 +34,7 @@ Non-Interactive Mode
 
 
 
-## How to run 
+## 🚀 How to run 
 
 After cloning the repo
 
